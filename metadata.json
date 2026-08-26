@@ -1,0 +1,6 @@
+{
+  "name": "NSE RSI Screener",
+  "description": "Live NSE ETF and stock screener highlighting top lowest RSI oversold opportunities with sortable table and Google Apps Script integration.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
