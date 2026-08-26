@@ -1,5 +1,5 @@
 import React from 'react';
-import { RefreshCw, Code2, Database, Clock, ArrowDownNarrowWide } from 'lucide-react';
+import { RefreshCw, Database, Clock, ArrowDownNarrowWide } from 'lucide-react';
 
 interface HeaderProps {
   lastUpdate: string;
@@ -16,7 +16,6 @@ export const Header: React.FC<HeaderProps> = ({
   isLive,
   isLoading,
   onRefresh,
-  onOpenAppsScriptModal,
   totalCount,
   oversoldBelow40Count,
 }) => {
@@ -84,16 +83,6 @@ export const Header: React.FC<HeaderProps> = ({
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin text-emerald-600' : 'text-slate-600'}`} />
             <span className="hidden sm:inline">Refresh</span>
-          </button>
-
-          {/* Google Apps Script Modal Trigger */}
-          <button
-            id="btn-open-apps-script-modal"
-            onClick={onOpenAppsScriptModal}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-slate-900 text-white text-xs font-semibold hover:bg-slate-800 active:bg-slate-950 transition-colors shadow-2xs"
-          >
-            <Code2 className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Apps Script (code.js)</span>
           </button>
         </div>
 
