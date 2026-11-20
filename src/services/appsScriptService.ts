@@ -8,6 +8,7 @@ export async function fetchSheetDataFromAppsScript(
   success: boolean;
   data: NseAsset[];
   lastUpdate: string;
+  sheetUrl?: string;
   source: 'live' | 'cache' | 'error';
   errorMessage?: string;
 }> {
@@ -56,6 +57,7 @@ export async function fetchSheetDataFromAppsScript(
       success: true,
       data: enrichedItems,
       lastUpdate: json.lastUpdate || new Date().toLocaleString('en-IN'),
+      sheetUrl: json.sheetUrl,
       source: 'live'
     };
   } catch (err: unknown) {

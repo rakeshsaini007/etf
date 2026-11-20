@@ -1,5 +1,5 @@
 import React from 'react';
-import { RefreshCw, Database, Clock, ArrowDownNarrowWide } from 'lucide-react';
+import { RefreshCw, Database, Clock, ArrowDownNarrowWide, FileSpreadsheet, ExternalLink, Pencil } from 'lucide-react';
 
 interface HeaderProps {
   lastUpdate: string;
@@ -7,6 +7,8 @@ interface HeaderProps {
   isLoading: boolean;
   onRefresh: () => void;
   onOpenAppsScriptModal: () => void;
+  sheetUrl: string;
+  onOpenSheetModal: () => void;
   totalCount: number;
   oversoldBelow40Count: number;
 }
@@ -16,6 +18,8 @@ export const Header: React.FC<HeaderProps> = ({
   isLive,
   isLoading,
   onRefresh,
+  sheetUrl,
+  onOpenSheetModal,
   totalCount,
   oversoldBelow40Count,
 }) => {
@@ -84,6 +88,46 @@ export const Header: React.FC<HeaderProps> = ({
             <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin text-emerald-600' : 'text-slate-600'}`} />
             <span className="hidden sm:inline">Refresh</span>
           </button>
+
+          {/* Navigate to Google Sheet Button */}
+          {sheetUrl ? (
+            <div className="inline-flex items-center rounded-lg shadow-2xs overflow-hidden">
+              <a
+                id="btn-open-google-sheet"
+                href={sheetUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white text-xs font-semibold transition-colors"
+                title="Open connected Google Sheet"
+              >
+                <FileSpreadsheet className="w-3.5 h-3.5" />
+                <span>Google Sheet</span>
+                <ExternalLink className="w-3 h-3 opacity-85" />
+              </a>
+              <button
+                id="btn-edit-google-sheet"
+                type="button"
+                onClick={onOpenSheetModal}
+                className="px-2 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-emerald-100 hover:text-white border-l border-emerald-500/40 transition-colors"
+                title="Change Google Sheet URL"
+                aria-label="Change Google Sheet URL"
+              >
+                <Pencil className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          ) : (
+            <button
+              id="btn-open-google-sheet"
+              type="button"
+              onClick={onOpenSheetModal}
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white text-xs font-semibold transition-colors shadow-2xs"
+              title="Link and open your Google Sheet"
+            >
+              <FileSpreadsheet className="w-3.5 h-3.5" />
+              <span>Google Sheet</span>
+              <ExternalLink className="w-3 h-3 opacity-85" />
+            </button>
+          )}
         </div>
 
       </div>

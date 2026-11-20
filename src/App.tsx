@@ -6,13 +6,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { NseAsset } from './types';
 import { getInitialEnrichedData, INITIAL_LAST_UPDATE } from './data/initialData';
-import { getStoredAppsScriptUrl, saveAppsScriptUrl } from './config';
+import { getStoredAppsScriptUrl, saveAppsScriptUrl, getStoredGoogleSheetUrl, saveGoogleSheetUrl, isValidSheetUrl } from './config';
 import { fetchSheetDataFromAppsScript } from './services/appsScriptService';
 import { Header } from './components/Header';
 import { TopFiveRsiCards } from './components/TopFiveRsiCards';
 import { SortableRsiTable } from './components/SortableRsiTable';
 import { ScreenerSummary } from './components/ScreenerSummary';
 import { AppsScriptModal } from './components/AppsScriptModal';
+import { GoogleSheetModal } from './components/GoogleSheetModal';
 import { Sparkles, Info, RefreshCw, Layers } from 'lucide-react';
 
 export default function App() {
@@ -21,7 +22,9 @@ export default function App() {
   const [isLive, setIsLive] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [appsScriptUrl, setAppsScriptUrl] = useState<string>(() => getStoredAppsScriptUrl());
+  const [sheetUrl, setSheetUrl] = useState<string>(() => getStoredGoogleSheetUrl());
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isSheetModalOpen, setIsSheetModalOpen] = useState<boolean>(false);
   const [selectedSearch, setSelectedSearch] = useState<string>('');
   const [notification, setNotification] = useState<{ message: string; type: 'info' | 'success' | 'warning' } | null>(null);
 
@@ -45,6 +48,10 @@ export default function App() {
         setAssets(result.data);
         setLastUpdate(result.lastUpdate);
         setIsLive(result.source === 'live');
+        if (result.sheetUrl && isValidSheetUrl(result.sheetUrl) && !getStoredGoogleSheetUrl()) {
+          setSheetUrl(result.sheetUrl);
+          saveGoogleSheetUrl(result.sheetUrl);
+        }
         if (result.source === 'live') {
           setNotification({
             message: `Updated live data (${result.data.length} NSE assets) via Google Apps Script`,
@@ -87,6 +94,10 @@ export default function App() {
         setIsLive(true);
         setAppsScriptUrl(testUrl);
         saveAppsScriptUrl(testUrl);
+        if (res.sheetUrl && isValidSheetUrl(res.sheetUrl) && !getStoredGoogleSheetUrl()) {
+          setSheetUrl(res.sheetUrl);
+          saveGoogleSheetUrl(res.sheetUrl);
+        }
         return true;
       }
       return false;
@@ -113,6 +124,8 @@ export default function App() {
         isLoading={isLoading}
         onRefresh={() => loadData()}
         onOpenAppsScriptModal={() => setIsModalOpen(true)}
+        sheetUrl={sheetUrl}
+        onOpenSheetModal={() => setIsSheetModalOpen(true)}
         totalCount={assets.length}
         oversoldBelow40Count={oversoldBelow40Count}
       />
@@ -224,6 +237,23 @@ export default function App() {
           loadData(url);
         }}
         onTestConnection={handleTestConnection}
+      />
+
+      {/* Google Sheet Link Modal */}
+      <GoogleSheetModal
+        isOpen={isSheetModalOpen}
+        onClose={() => setIsSheetModalOpen(false)}
+        currentSheetUrl={sheetUrl}
+        onSaveSheetUrl={(url) => {
+          setSheetUrl(url);
+          saveGoogleSheetUrl(url);
+          if (url) {
+            setNotification({
+              message: 'Google Sheet link saved! Click "Google Sheet" anytime to open it.',
+              type: 'success',
+            });
+          }
+        }}
       />
     </div>
   );

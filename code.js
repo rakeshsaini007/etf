@@ -27,7 +27,8 @@
  */
 function doGet(e) {
   try {
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+    const sheet = spreadsheet.getActiveSheet();
     const data = sheet.getDataRange().getValues();
 
     if (!data || data.length === 0) {
@@ -123,6 +124,7 @@ function doGet(e) {
     const payload = {
       status: "success",
       lastUpdate: lastUpdate,
+      sheetUrl: spreadsheet.getUrl(),
       totalCount: records.length,
       topFiveLowestRsi: sorted.slice(0, 5),
       items: outputRecords

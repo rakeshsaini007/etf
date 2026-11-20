@@ -13,6 +13,7 @@ export type ViewFilter = 'top5' | 'all' | 'oversold' | 'neutral' | 'overbought';
 export interface SheetApiResponse {
   status: 'success' | 'error';
   lastUpdate?: string;
+  sheetUrl?: string;
   totalCount?: number;
   topFiveLowestRsi?: NseAsset[];
   items?: NseAsset[];

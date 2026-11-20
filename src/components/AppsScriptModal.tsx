@@ -42,7 +42,8 @@ export const AppsScriptModal: React.FC<AppsScriptModalProps> = ({
  */
 function doGet(e) {
   try {
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+    const sheet = spreadsheet.getActiveSheet();
     const data = sheet.getDataRange().getValues();
 
     if (!data || data.length === 0) {
@@ -82,6 +83,7 @@ function doGet(e) {
     return createJsonResponse({
       status: "success",
       lastUpdate: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
+      sheetUrl: spreadsheet.getUrl(),
       totalCount: records.length,
       topFiveLowestRsi: sorted.slice(0, 5),
       items: records
